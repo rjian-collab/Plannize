@@ -23,6 +23,7 @@
   "build": {
     "appId": "Plannize.App",
     "productName": "Plannize",
+    "artifactName": "Plannize-Setup-${version}.${ext}",
     "files": [
       "electron-main.js",
       "server.js",

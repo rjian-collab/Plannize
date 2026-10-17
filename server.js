@@ -37,7 +37,7 @@ app.use('/attachments', express.static(ATTACH_DIR));
 
 function readData() {
   if (!fs.existsSync(DATA_PATH)) {
-    return { projects: [] };
+    return { projects: [], routines: [] }; // fresh install: no data file yet
   }
   const raw = fs.readFileSync(DATA_PATH, 'utf-8');
   const data = raw.trim() ? JSON.parse(raw) : { projects: [] };
