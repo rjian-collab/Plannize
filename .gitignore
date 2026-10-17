@@ -1,0 +1,9 @@
+node_modules/
+dist/
+# 個人資料與 Google 金鑰/授權 —— 絕對不要上傳
+data/
+server.log
+*.log
+# 含個人路徑的一次性匯入腳本
+scripts/import_xlsx.py
+_github-upload/

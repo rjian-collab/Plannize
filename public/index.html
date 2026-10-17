@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'">
+<title>Plannize 高效規劃</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="app-header glass">
+  <div class="brand">
+    <div class="brand-icon">✓</div>
+    <div class="brand-text">
+      <h1>Plannize</h1>
+      <p>高效規劃</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="view-switch">
+      <button id="viewListBtn" class="active">清單</button>
+      <button id="viewCalendarBtn">日曆</button>
+    </div>
+    <button id="newProjectBtn" class="btn-primary">＋ 新增專案</button>
+    <button id="themeToggleBtn" class="icon-btn" title="切換深色模式">🌙</button>
+    <button id="settingsBtn" class="icon-btn" title="設定：Google 帳號">⚙️</button>
+  </div>
+</header>
+
+<div class="toolbar glass">
+  <div class="search-box">
+    <span>🔍</span>
+    <input id="searchInput" type="text" placeholder="搜尋專案標題…">
+  </div>
+
+  <div class="dropdown" id="sortDropdown">
+    <button class="dropdown-trigger" id="sortTrigger">排序：截止日 ▾</button>
+  </div>
+
+  <div class="view-switch layout-switch" id="layoutSwitch">
+    <button data-layout="rows" title="列表：一列一個專案">☰ 列表</button>
+    <button data-layout="cards" title="卡片">▦ 卡片</button>
+  </div>
+
+  <div class="chip-group" id="priorityChips"></div>
+  <div class="chip-group" id="categoryChips"></div>
+
+  <div class="spacer"></div>
+
+  <label class="toggle-archived">
+    <input type="checkbox" id="showArchivedToggle"> 顯示已封存
+  </label>
+</div>
+
+<main>
+  <section id="routineStrip" class="routine-strip glass" hidden></section>
+  <div id="listView" class="project-grid"></div>
+
+  <div id="calendarView" style="display:none">
+    <div class="calendar-header">
+      <button class="icon-btn" id="calPrevBtn">‹</button>
+      <h2 id="calTitle"></h2>
+      <button class="icon-btn" id="calNextBtn">›</button>
+      <button class="btn-ghost" id="calTodayBtn">今天</button>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+  </div>
+</main>
+
+<div class="backdrop" id="backdrop"></div>
+
+<div class="jelly-panel panel-detail glass" id="detailPanel"></div>
+<div class="jelly-panel panel-new glass" id="newPanel"></div>
+<div class="jelly-panel panel-new panel-routine glass" id="routinePanel"></div>
+<div class="dropdown-menu glass" id="globalDropdownMenu"></div>
+<div class="dropdown-menu glass" id="sortMenu"></div>
+<div class="date-popup glass" id="globalDatePopup"></div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script src="cloth.js"></script>
+<script src="ripple.js"></script>
+<script src="complete.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
