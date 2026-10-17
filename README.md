@@ -1,50 +1,70 @@
-# Plannize 高效規劃
+# Plannize
 
-毛玻璃質感的個人專案管理桌面 App(Electron + Express),資料全部存在自己的電腦上。
+A frosted-glass personal project manager for Windows (Electron + Express). Everything is stored on your own computer.
 
-## 功能
+> The interface is currently in Traditional Chinese (繁體中文).
 
-- 清單／日曆視圖、分類與優先級篩選、搜尋、子工作項
-- 完成度 100% 自動封存,附完成動畫
-- 截止提醒(Windows 桌面通知,使用工作排程器)
-- 週期性例行任務與打卡紀錄
-- 自動每日備份(保留 14 天)與還原
-- 選用:Google 日曆雙向同步、Gmail 提醒信、雲端硬碟連結
+## Features
 
-## 安裝(一般使用者)
+- List, card and calendar views; category and priority filters; search; subtasks
+- Projects archive themselves at 100% progress, with a completion animation
+- Deadline reminders as Windows toast notifications, scheduled through Windows Task Scheduler — nothing stays running in the background
+- Recurring routines (daily / weekly / monthly) with check-ins, streaks and a 12-week history
+- Automatic daily backups (14 days kept) with one-click restore
+- Optional: two-way Google Calendar sync, Gmail reminder emails, Google Drive links
 
-到 [Releases](../../releases) 下載最新的 `.exe` 安裝檔並執行。資料會存在 `%APPDATA%\Plannize\data`。
+## Install
 
-> 目前只支援 Windows。安裝檔未經程式碼簽章,Windows SmartScreen 可能會警告,選「其他資訊 → 仍要執行」即可。
+Download the latest `Plannize-Setup-<version>.exe` from [Releases](https://github.com/rjian-collab/Plannize/releases/latest) and run it. Your data is stored in `%APPDATA%\Plannize\data`.
 
-## 從原始碼執行
+Requires Windows 10 or 11 (64-bit). The frosted-glass window backdrop is a Windows 11 feature; Windows 10 shows a plain background.
 
-需要 [Node.js](https://nodejs.org/) 22 以上。
+> The installer is **not code-signed**, so Windows SmartScreen may show "Windows protected your PC". Click **More info → Run anyway**. You can compare the file's SHA-256 with the one listed in the release notes.
+
+## Run from source
+
+Requires [Node.js](https://nodejs.org/) 22 or newer.
 
 ```
 npm install
 npm run electron
 ```
 
-從原始碼執行時,資料存在專案資料夾內的 `data\`(已被 `.gitignore` 排除)。
+When run from source, data is stored in `data\` inside the project folder (excluded by `.gitignore`).
 
-## 自行打包
+> Plannize listens on `127.0.0.1:47821` and shares one set of reminder tasks (the `ProjMgr` folder in Task Scheduler), so run **either** the installed app **or** the source version at a time, not both.
+
+## Build the installer
 
 ```
+npm ci
 npm run dist
 ```
 
-安裝檔會產生在 `dist\`。
+The installer is written to `dist\Plannize-Setup-<version>.exe`.
 
-## 啟用 Google 功能(選用)
+## Reminders
 
-本專案不附帶任何金鑰,需要自己建立:
+Each reminder is a one-shot task in Windows Task Scheduler under the `ProjMgr` folder (current user, no admin rights). When it fires it shows one notification, optionally sends an email, deletes itself and exits. Reminders missed while the PC was off or asleep are delivered when it wakes. To remove them all, delete the `ProjMgr` folder in Task Scheduler; Plannize recreates what it needs the next time it starts.
 
-1. 到 [Google Cloud Console](https://console.cloud.google.com/) 建立專案,啟用 Calendar、Gmail、Drive API。
-2. 建立「電腦版應用程式」類型的 OAuth 用戶端,下載 JSON。
-3. 將內容存成 `data\google-credentials.json`(安裝版為 `%APPDATA%\Plannize\data\google-credentials.json`),欄位需含 `client_id` 與 `client_secret`。
-4. 在 App 右上角 ⚙️ 連結 Google 帳號。
+## Backups
 
-## 授權
+A copy of your data is saved to `data\backup\` once a day (the newest 14 are kept). Open **⚙️ Settings → Data backup** to back up immediately, open the folder, or restore any copy. Restoring first saves your current data as a "before restore" backup.
 
-MIT
+## Google features (optional)
+
+Plannize ships with no keys; you create your own Google OAuth client:
+
+1. In the [Google Cloud Console](https://console.cloud.google.com/), create a project and enable the **Calendar**, **Gmail** and **Drive** APIs.
+2. Configure the OAuth consent screen (user type **External**) and **publish it** (status *In production*). If it stays in *Testing*, Google expires the sign-in every 7 days.
+3. Create an OAuth client ID of type **Desktop app** and download its JSON.
+4. Save it as `data\google-credentials.json` (for the installed app: `%APPDATA%\Plannize\data\google-credentials.json`). It must contain `client_id` and `client_secret`.
+5. In the app, open **⚙️ Settings → Link Google account** and sign in. Because the client is your own and unverified, Google shows a warning — choose **Advanced → continue**.
+
+Only the narrowest scopes are requested: `gmail.send` (send only, cannot read mail), `calendar.app.created` (only the calendar Plannize creates), `drive.metadata.readonly` (file names and links only), plus `openid email`. The sign-in token is stored encrypted (Windows DPAPI) on your computer and is only ever sent to Google.
+
+Two-way calendar sync uses a dedicated calendar named **Plannize**: projects with a deadline appear there as all-day events, dragging an event to another day changes the deadline, and events added in that calendar become new projects.
+
+## License
+
+[MIT](LICENSE)
